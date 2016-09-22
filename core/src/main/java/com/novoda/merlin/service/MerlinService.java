@@ -3,6 +3,7 @@ package com.novoda.merlin.service;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.IBinder;
@@ -16,6 +17,8 @@ import com.novoda.merlin.receiver.ConnectivityReceiver;
 import com.novoda.merlin.registerable.bind.BindListener;
 import com.novoda.merlin.registerable.connection.ConnectListener;
 import com.novoda.merlin.registerable.disconnection.DisconnectListener;
+
+import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
 
 public class MerlinService extends Service implements HostPinger.PingerCallback {
 
@@ -41,6 +44,9 @@ public class MerlinService extends Service implements HostPinger.PingerCallback 
         super.onCreate();
         hostPinger = buildDefaultHostPinger();
         networkStatusRetriever = buildNetworkStatusRetriever();
+
+        IntentFilter intentFilter = new IntentFilter(CONNECTIVITY_ACTION);
+        this.registerReceiver(new ConnectivityReceiver(), intentFilter);
     }
 
     @VisibleForTesting
